@@ -153,4 +153,10 @@ echo "*.dll" >> .gitignore
 
 # Commit the updated .gitignore
 git add .gitignore
-git commit -m "chore: update gitignore to exclude large binary files"
+git commit -m "chore: update gitignore to exclude large binary files"# Kubernetes binaries
+kubectl*
+minikube*
+
+echo "# Kubernetes binaries" >> .gitignore
+echo "kubectl*" >> .gitignore
+echo "minikube*" >> .gitignore
