@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: habit-tracker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: habit-tracker-backend:latest
+        imagePullPolicy: Never  # Use local images
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:postgres123@postgres:5432/habit_tracker"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        # Remove health checks temporarily to allow startup
+        # livenessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 8000
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 10
+        #   timeoutSeconds: 5
+        #   failureThreshold: 3
+        # readinessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 8000
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 5
+        #   timeoutSeconds: 5
+        #   failureThreshold: 3
