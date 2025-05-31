@@ -142,3 +142,15 @@ temp/
 *.njsproj
 *.sln
 *.sw?
+
+# Add these lines to your .gitignore file
+echo "kubectl" >> .gitignore
+echo "minikube-linux-amd64" >> .gitignore
+echo "*.exe" >> .gitignore  # Prevent other binaries
+echo "*.bin" >> .gitignore
+echo "*.so" >> .gitignore
+echo "*.dll" >> .gitignore
+
+# Commit the updated .gitignore
+git add .gitignore
+git commit -m "chore: update gitignore to exclude large binary files"
