@@ -18,7 +18,7 @@ app = FastAPI(title="Habit Tracker API", version="1.0.0")
 origins = [
     "http://localhost:3000",  # Local development
     "https://localhost:3000",
-    "https://your-vercel-app.vercel.app",  # Replace with your actual Vercel URL
+    "https://habit-tracker-eight-phi.vercel.app/",  # Replace with your actual Vercel URL
 ]
 
 # Add environment variable for additional origins
