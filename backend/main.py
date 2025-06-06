@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import date
+import os
 
 import models
 import schemas
@@ -11,12 +12,22 @@ from database import engine, get_db
 # Create tables
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Habit Tracker API")
+app = FastAPI(title="Habit Tracker API", version="1.0.0")
 
-# Add CORS middleware
+# Configure CORS for production
+origins = [
+    "http://localhost:3000",  # Local development
+    "https://localhost:3000",
+    "https://your-vercel-app.vercel.app",  # Replace with your actual Vercel URL
+]
+
+# Add environment variable for additional origins
+if cors_origins := os.getenv("CORS_ORIGINS"):
+    origins.extend(cors_origins.split(","))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://frontend:3000"],  # Added docker service name
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,7 +36,12 @@ app.add_middleware(
 # Health check endpoint
 @app.get("/health")
 def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy", "version": "1.0.0"}
+
+# Root endpoint
+@app.get("/")
+def root():
+    return {"message": "Habit Tracker API", "version": "1.0.0"}
 
 # Habit endpoints
 @app.get("/habits", response_model=List[schemas.Habit])
@@ -132,7 +148,3 @@ def delete_completion(habit_id: int, completion_date: date, db: Session = Depend
     db.delete(completion)
     db.commit()
     return {"message": "Completion deleted successfully"}
-
-@app.get("/")
-def root():
-    return {"message": "Habit Tracker API"}
