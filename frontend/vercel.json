@@ -9,7 +9,7 @@
     "routes": [
       {
         "src": "/api/(.*)",
-        "dest": "$BACKEND_URL/$1"
+        "dest": "$NEXT_PUBLIC_API_URL/$1"
       },
       {
         "src": "/(.*)",
@@ -17,7 +17,7 @@
       }
     ],
     "env": {
-      "NEXT_PUBLIC_API_URL": "@backend_url"
+      "NEXT_PUBLIC_API_URL": "@NEXT_PUBLIC_API_URL"
     }
   }
   
