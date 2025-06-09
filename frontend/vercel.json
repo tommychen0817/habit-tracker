@@ -9,7 +9,7 @@
     "routes": [
       {
         "src": "/api/(.*)",
-        "dest": "https://tommy-habit-tracker.up.railway.app/$1"
+        "dest": "https://tommy-habit-tracker.up.railway.app"
       }
     ],
     "env": {
