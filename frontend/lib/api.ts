@@ -1,5 +1,11 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
+function authHeaders() {
+  if (typeof window === "undefined") return {}
+  const token = localStorage.getItem("token")
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
 export interface HabitCompletion {
   id: number
   habit_id: number
@@ -28,9 +34,21 @@ export interface CreateCompletionData {
   description?: string
 }
 
+export async function loginWithGoogle(idToken: string): Promise<{ access_token: string }> {
+  const response = await fetch(`${API_BASE_URL}/auth/google`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id_token: idToken }),
+  })
+  if (!response.ok) throw new Error("Failed to login")
+  return response.json()
+}
+
 // Habit API functions
 export async function getHabits(): Promise<Habit[]> {
-  const response = await fetch(`${API_BASE_URL}/habits`)
+  const response = await fetch(`${API_BASE_URL}/habits`, {
+    headers: { ...authHeaders() },
+  })
   if (!response.ok) throw new Error("Failed to fetch habits")
   return response.json()
 }
@@ -38,7 +56,7 @@ export async function getHabits(): Promise<Habit[]> {
 export async function createHabit(data: CreateHabitData): Promise<Habit> {
   const response = await fetch(`${API_BASE_URL}/habits`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   })
   if (!response.ok) throw new Error("Failed to create habit")
@@ -48,6 +66,7 @@ export async function createHabit(data: CreateHabitData): Promise<Habit> {
 export async function deleteHabit(habitId: number): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/habits/${habitId}`, {
     method: "DELETE",
+    headers: { ...authHeaders() },
   })
   if (!response.ok) throw new Error("Failed to delete habit")
 }
@@ -56,7 +75,7 @@ export async function deleteHabit(habitId: number): Promise<void> {
 export async function createCompletion(habitId: number, data: CreateCompletionData): Promise<HabitCompletion> {
   const response = await fetch(`${API_BASE_URL}/habits/${habitId}/completions`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   })
   if (!response.ok) throw new Error("Failed to create completion")
@@ -70,7 +89,7 @@ export async function updateCompletion(
 ): Promise<HabitCompletion> {
   const response = await fetch(`${API_BASE_URL}/habits/${habitId}/completions/${date}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   })
   if (!response.ok) throw new Error("Failed to update completion")
@@ -80,6 +99,7 @@ export async function updateCompletion(
 export async function deleteCompletion(habitId: number, date: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/habits/${habitId}/completions/${date}`, {
     method: "DELETE",
+    headers: { ...authHeaders() },
   })
   if (!response.ok) throw new Error("Failed to delete completion")
 }
