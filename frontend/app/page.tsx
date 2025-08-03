@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { HabitTracker } from "@/components/habit-tracker"
-import { GoogleLoginButton } from "@/components/auth/google-login-button"
+import { HabitTracker } from "../components/habit-tracker"
+import { GoogleLoginButton } from "../components/auth/google-login-button"
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(null)

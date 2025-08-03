@@ -1,7 +1,7 @@
 "use client"
 
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google"
-import { loginWithGoogle } from "@/lib/api"
+import { loginWithGoogle } from "../../lib/api"
 
 export function GoogleLoginButton({ onLogin }: { onLogin: () => void }) {
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""
